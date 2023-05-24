@@ -1,0 +1,25 @@
+#!/usr/bin/env python3
+
+import sys, re
+from subprocess import check_output
+
+# Collect the parameters
+commit_msg_filepath = sys.argv[1]
+
+# Figure out which branch we're on
+branch = str(check_output(['git', 'symbolic-ref', '--short', 'HEAD']).strip())
+
+# Search for issue number in the branch name
+# Example: JIRA-1234-567
+result = re.search('/[A-Z]*(-[0-9]*)*', branch)
+if result:
+    issue_number = result.group(0)
+    issue_number = issue_number[1:]
+    print("Found issue number \"{issue_number}\" in the branch name")
+
+    with open(commit_msg_filepath, 'r+') as f:
+        content = f.read()
+        f.seek(0, 0)
+        f.write(f"{issue_number}: {content}")
+else:
+    print("No JIRA issue number found in branch name.")
