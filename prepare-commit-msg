@@ -5,24 +5,24 @@ from subprocess import check_output
 
 # Collect the parameters
 commit_msg_filepath = sys.argv[1]
-commit_source = sys.argv[2]
 
-if commit_source == "message":
-
-    # Figure out which branch we're on
+# Figure out which branch we're on
+try:
     branch = str(check_output(['git', 'symbolic-ref', '--short', 'HEAD']).strip())
+except:
+    print("Invalid branch name")
+    sys.exit(0)
+# Search for issue number in the branch name
+# Example: JIRA1234-567
+result = re.search('/[A-Z0-9]*-[0-9]*', branch)
+if result:
+    issue_number = result.group(0)
+    issue_number = issue_number[1:]
+    print(f"Found issue number \"{issue_number}\" in the branch name")
 
-    # Search for issue number in the branch name
-    # Example: JIRA1234-567
-    result = re.search('/[A-Z0-9]*-[0-9]*', branch)
-    if result:
-        issue_number = result.group(0)
-        issue_number = issue_number[1:]
-        print(f"Found issue number \"{issue_number}\" in the branch name")
-
-        with open(commit_msg_filepath, 'r+') as f:
-            content = f.read()
-            f.seek(0, 0)
-            f.write(f"{issue_number}: {content}")
-    else:
-        print("No JIRA issue number found in branch name.")
+    with open(commit_msg_filepath, 'r+') as f:
+        content = f.read()
+        f.seek(0, 0)
+        f.write(f"{issue_number}: {content}")
+else:
+    print("No JIRA issue number found in branch name.")
