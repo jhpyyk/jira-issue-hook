@@ -19,7 +19,7 @@ if commit_source == "message":
     if result:
         issue_number = result.group(0)
         issue_number = issue_number[1:]
-        print("Found issue number \"{issue_number}\" in the branch name")
+        print(f"Found issue number \"{issue_number}\" in the branch name")
 
         with open(commit_msg_filepath, 'r+') as f:
             content = f.read()
