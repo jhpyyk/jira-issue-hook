@@ -7,7 +7,7 @@ from subprocess import check_output
 commit_msg_filepath = sys.argv[1]
 commit_source = sys.argv[2]
 
-if commit_source == "commit":
+if commit_source == "":
 
     # Figure out which branch we're on
     branch = str(check_output(['git', 'symbolic-ref', '--short', 'HEAD']).strip())
