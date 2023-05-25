@@ -7,7 +7,6 @@ from subprocess import check_output
 commit_msg_filepath = sys.argv[1]
 commit_source = sys.argv[2]
 
-print(commit_source)
 if commit_source == "message":
 
     # Figure out which branch we're on
