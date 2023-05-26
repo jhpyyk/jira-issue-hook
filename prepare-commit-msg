@@ -6,23 +6,24 @@ from subprocess import check_output
 # Collect the parameters
 commit_msg_filepath = sys.argv[1]
 
-# Figure out which branch we're on
 try:
+    # Figure out which branch we're on
     branch = str(check_output(['git', 'symbolic-ref', '--short', 'HEAD']).strip())
 except:
-    print("Invalid branch name")
+    print("prepare-commit-msg: HEADless branch. OK if rebasing. No prefix added.")
     sys.exit(0)
+
 # Search for issue number in the branch name
 # Example: JIRA1234-567
 result = re.search('/[A-Z0-9]*-[0-9]*', branch)
 if result:
     issue_number = result.group(0)
     issue_number = issue_number[1:]
-    print(f"Found issue number \"{issue_number}\" in the branch name")
+    print(f"prepare-commit-msg: Found issue number \"{issue_number}\" in the branch name. Adding prefix to comment")
 
     with open(commit_msg_filepath, 'r+') as f:
         content = f.read()
         f.seek(0, 0)
         f.write(f"{issue_number}: {content}")
 else:
-    print("No JIRA issue number found in branch name.")
+    print("prepare-commit-msg: No JIRA issue number found in branch name. No prefix added.")
