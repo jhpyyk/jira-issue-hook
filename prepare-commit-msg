@@ -19,7 +19,7 @@ result = re.search('/[A-Z0-9]*-[0-9]*', branch)
 if result:
     issue_number = result.group(0)
     issue_number = issue_number[1:]
-    print(f"prepare-commit-msg: Found issue number \"{issue_number}\" in the branch name. Adding prefix to comment")
+    print(f"prepare-commit-msg: Found issue number \"{issue_number}\" in the branch name. Adding prefix to message.")
 
     with open(commit_msg_filepath, 'r+') as f:
         content = f.read()
